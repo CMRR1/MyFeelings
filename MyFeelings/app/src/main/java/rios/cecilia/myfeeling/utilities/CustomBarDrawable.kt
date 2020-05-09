@@ -28,7 +28,7 @@ class CustomBarDrawable: Drawable{
         p0.drawRect(coordenadas!!, fondo)
 
         if(this.emocion !=null){
-            val porcentaje:Float=this.emocion!!.procentaje*(p0.width-10)/100
+            val porcentaje:Float=this.emocion!!.porcentaje*(p0.width-10)/100
             var coordenadas2=RectF(0.0F, 0.0F, porcentaje, alto)
             var seccion: Paint= Paint()
             seccion.style=Paint.Style.FILL

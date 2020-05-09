@@ -3,9 +3,11 @@ package rios.cecilia.myfeeling
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONArray
 import org.json.JSONException
+import org.json.JSONObject
 import rios.cecilia.myfeeling.utilities.*
 import rios.cecilia.myfeeling.utilities.Emociones
 
@@ -23,6 +25,51 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        jsonFile=JSONFile()
+        fetchingData()
+        if(!data){
+            var emociones=ArrayList<Emociones>()
+            val fondo = CustomCircleDrawable(this, emociones)
+            graph.background=fondo
+            graphVerryHappy.background=CustomBarDrawable(this, Emociones("Muy Feliz", 0.0F, R.color.mustard, veryHappy))
+            graphHappy.background=CustomBarDrawable(this, Emociones("Feliz", 0.0F, R.color.orange, happy))
+            graphNeutral.background=CustomBarDrawable(this, Emociones("Neutral", 0.0F, R.color.greenie, neutral))
+            graphSad.background=CustomBarDrawable(this, Emociones("Triste", 0.0F, R.color.blue, sad))
+            graphVerySad.background=CustomBarDrawable(this, Emociones("Muy Triste", 0.0F, R.color.deepBlue, verySad))
+        }else{
+            actualizarGrafica()
+            iconoMayoria()
+        }
+
+        guardarButton.setOnClickListener {
+            guardar()
+        }
+        veryHappyButton.setOnClickListener{
+            veryHappy++
+            iconoMayoria()
+            actualizarGrafica()
+        }
+        verySadButton.setOnClickListener {
+            verySad++
+            iconoMayoria()
+            actualizarGrafica()
+        }
+        neutralButton.setOnClickListener {
+            neutral++
+            iconoMayoria()
+            actualizarGrafica()
+        }
+        happyButton.setOnClickListener {
+            happy++
+            iconoMayoria()
+            actualizarGrafica()
+        }
+        sadButton.setOnClickListener {
+            sad++
+            iconoMayoria()
+            actualizarGrafica()
+        }
     }
 
     fun fetchingData(){
@@ -120,6 +167,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun guardar(){
-        
+        var jsonArray=JSONArray()
+        var o :Int=0
+        for(i in lista){
+            Log.d("objetos", i.toString())
+            var j: JSONObject= JSONObject()
+            j.put("nombre", i.nombre)
+            j.put("porcentaje", i.porcentaje)
+            j.put("color", i.color)
+            j.put("total", i.total)
+
+            jsonArray.put(o, j)
+            o++
+        }
+
+        jsonFile?.saveData(this, jsonArray.toString())
+        Toast.makeText(this,"Datos guardados", Toast.LENGTH_SHORT).show()
     }
 }
